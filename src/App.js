@@ -23,7 +23,7 @@ class App extends Component {
       client_id: "EYJCAAINPD5VSJ4PT0GBCTLUXQR52IUIXV3NGLCYCF0HB2QV",
       client_secret: "O5TYKE5UWLUQSRNADV34VFFYJXOQX0L1Q0MPYTLN2XESWG5I",
       query: "food",
-      near: "Sydney",
+      near: "Flushing",
       v: "20190205"
     }
 
@@ -43,8 +43,8 @@ class App extends Component {
   initMap = () => {
     // create map
     var map = new window.google.maps.Map(document.getElementById('map'), {
-      center: {lat: -34.397, lng: 150.644},
-      zoom: 10
+      center: {lat: 40.7623706, lng: -73.8371959},
+      zoom: 14
     })
 
     // creates InfoWindow
@@ -53,13 +53,14 @@ class App extends Component {
     //create and display markers
     this.state.venues.map(myVenue => {
 
-      var contentString = `<h3>${myVenue.venue.name}</h3><p>${myVenue.venue.location.address}</p>`
+      var contentString = `<h3>${myVenue.venue.name}</h3><p>${myVenue.venue.location.address}</p><p></p>`
 
       // create marker
       var marker = new window.google.maps.Marker({
         position: {lat: myVenue.venue.location.lat, lng: myVenue.venue.location.lng},
         map: map,
-        title: myVenue.venue.name
+        title: myVenue.venue.name,
+        animation: window.google.maps.Animation.DROP
       });
 
       marker.addListener('click', function() {
@@ -67,6 +68,7 @@ class App extends Component {
         infowindow.setContent(contentString)
         // open InfoWindow
         infowindow.open(map, marker);
+        marker.setAnimation(4)
       });
     })
   }
