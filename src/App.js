@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import './App.css';
-
 import axios from 'axios'
 
 class App extends Component {
@@ -27,6 +26,8 @@ class App extends Component {
       near: "Sydney",
       v: "20190205"
     }
+
+    // set venues
     axios.get(endPoint + new URLSearchParams(parameters))
       .then(response => {
         this.setState({
@@ -40,16 +41,32 @@ class App extends Component {
   }
 
   initMap = () => {
+    // create map
     var map = new window.google.maps.Map(document.getElementById('map'), {
       center: {lat: -34.397, lng: 150.644},
-      zoom: 8
+      zoom: 10
     })
 
+    // creates InfoWindow
+    var infowindow = new window.google.maps.InfoWindow();
+
+    //create and display markers
     this.state.venues.map(myVenue => {
+
+      var contentString = `<h3>${myVenue.venue.name}</h3><p>${myVenue.venue.location.address}</p>`
+
+      // create marker
       var marker = new window.google.maps.Marker({
         position: {lat: myVenue.venue.location.lat, lng: myVenue.venue.location.lng},
         map: map,
         title: myVenue.venue.name
+      });
+
+      marker.addListener('click', function() {
+        // change InfoWindow content
+        infowindow.setContent(contentString)
+        // open InfoWindow
+        infowindow.open(map, marker);
       });
     })
   }
