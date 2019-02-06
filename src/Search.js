@@ -7,8 +7,10 @@ class Search extends Component {
       <div className="search">
         <div className="search-bar">
           <input type="text"
-                 placeholder="Search"
+                 placeholder="Search for a restaurant"
                  value={this.props.query}
+                 aria-label="Search"
+                 className="search-bar-input"
                  onChange={event => this.props.searchQuery(event.target.value)}/>
         </div>
 
