@@ -2,16 +2,18 @@ import React, { Component } from 'react';
 import './App.css';
 import axios from 'axios'
 import Search from './Search.js'
+import Errorboundary from './Errorboundary'
 
 class App extends Component {
-
-  state = {
+  constructor(props) {
+    super(props);
+  this.state = {
     venues: [],
     allMarkers: [],
     results: [],
     query: ""
   }
-
+  }
   componentDidMount() {
     this.getVenues()
   }
@@ -39,7 +41,7 @@ class App extends Component {
         }, this.renderMap())
       })
       .catch(error => {
-        console.log("Error " + error)
+        alert(error)
       })
   }
 
@@ -106,12 +108,16 @@ class App extends Component {
   render() {
     return (
       <main>
-        <div id="map" role="application" aria-label="map">Map Loading...</div>
-        <Search allMarkers={this.state.allMarkers}
-          clickedOnSpot={this.clickedOnSpot}
-          searchQuery={this.searchQuery}
-          results={this.state.results}
-        />
+        <Errorboundary>
+          <div id="map" role="application" aria-label="map">Map Loading...</div>
+        </Errorboundary>
+        <Errorboundary>
+          <Search allMarkers={this.state.allMarkers}
+            clickedOnSpot={this.clickedOnSpot}
+            searchQuery={this.searchQuery}
+            results={this.state.results}
+            />
+        </Errorboundary>
       </main>
     );
   }
