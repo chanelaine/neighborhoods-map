@@ -1,11 +1,15 @@
 import React, { Component } from 'react';
 import './App.css';
 import axios from 'axios'
+import Search from './Search.js'
 
 class App extends Component {
 
   state = {
-    venues: []
+    venues: [],
+    allMarkers: [],
+    results: [],
+    query: ""
   }
 
   componentDidMount() {
@@ -46,7 +50,7 @@ class App extends Component {
       center: {lat: 40.7623706, lng: -73.8371959},
       zoom: 14
     })
-
+    let mapMarkers = [];
     // creates InfoWindow
     var infowindow = new window.google.maps.InfoWindow();
 
@@ -59,7 +63,8 @@ class App extends Component {
       var marker = new window.google.maps.Marker({
         position: {lat: myVenue.venue.location.lat, lng: myVenue.venue.location.lng},
         map: map,
-        title: myVenue.venue.name,
+        id: myVenue.venue.id,
+        name: myVenue.venue.name,
         animation: window.google.maps.Animation.DROP
       });
 
@@ -68,15 +73,46 @@ class App extends Component {
         infowindow.setContent(contentString)
         // open InfoWindow
         infowindow.open(map, marker);
+        // animate marker when clicked
         marker.setAnimation(4)
       });
+      mapMarkers.push(marker);
+      return myVenue
     })
+    this.setState({ results: mapMarkers, allMarkers: mapMarkers })
+  }
+
+
+  searchQuery = (query) => {
+    this.setState({ query: query.trim() }, () => {
+      this.searchUpdate(this.state.query)
+    })
+  }
+
+  searchQuery = (query) => {
+    let searchedVenues = this.state.allMarkers.filter(venue => venue.name.toLowerCase().includes(query.toLowerCase()));
+    this.state.allMarkers.forEach(marker => {
+      marker.name.toLowerCase().includes(query.toLowerCase())
+        ? marker.setVisible(true)
+        : marker.setVisible(false)
+    })
+    this.setState({ results: searchedVenues, query })
+  }
+
+  clickedOnSpot = venue => {
+    const marker = this.state.allMarkers.find(m => m.id === venue.id);
+    window.google.maps.event.trigger(marker, 'click');
   }
 
   render() {
     return (
       <main>
-        <div id="map" role="application" aria-label="map"></div>
+        <div id="map" role="application" aria-label="map">Map Loading...</div>
+        <Search allMarkers={this.state.allMarkers}
+          clickedOnSpot={this.clickedOnSpot}
+          searchQuery={this.searchQuery}
+          results={this.state.results}
+        />
       </main>
     );
   }
