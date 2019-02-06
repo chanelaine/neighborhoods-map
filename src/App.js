@@ -15,7 +15,10 @@ class App extends Component {
   }
   }
   componentDidMount() {
-    this.getVenues()
+    this.getVenues();
+    window.gm_authFailure = () => {
+      window.alert("Sorry!!!  Something went wrong.  This page didn't load Google Maps correctly.  See the JavaScript console for technical details.")
+}
   }
 
   renderMap = () => {
