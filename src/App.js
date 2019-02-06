@@ -37,7 +37,6 @@ class App extends Component {
         this.setState({
           venues: response.data.response.groups[0].items
         }, this.renderMap())
-        console.log(response)
       })
       .catch(error => {
         console.log("Error " + error)
